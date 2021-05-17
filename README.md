@@ -96,7 +96,5 @@ Any other errors that pop up are likely due to user error, i.e., not
 placing the prompt responses in single-quotes, '' or brackets, [].  
         
 
-Author: Jasper Mark
-
-Last Update: 5/17/2021
+Author: Jasper Mark | Last Update: 5/17/2021
         
