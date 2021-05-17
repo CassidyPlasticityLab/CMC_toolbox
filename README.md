@@ -90,12 +90,13 @@ Case 4. The trials are made, but only a couple of timings are off.
         in the comaned window. After completing the steps open up trials in
         the workspace. By hand, look for the trials that are greater than 3
         seconds (3000ms) and delete the corresponding row. Then enter lines 
-        140:174 in the command line. finí!
+        140:174 in the command line. finÃ­!
 
 Any other errors that pop up are likely due to user error, i.e., not 
 placing the prompt responses in single-quotes, '' or brackets, [].  
         
 
 Author: Jasper Mark
+
 Last Update: 5/17/2021
         
