@@ -1,5 +1,5 @@
 tic
-load fd
+%load fd
 load('regions.mat')
 import cohAllReg.*
 import getCoh.*
@@ -33,28 +33,31 @@ for i = 2:size(coh.cohSquare, 2)
             coh.gamma2{i, j} =mean(mean(coh.cohSquare{i, j}(:, 121:148))); % 41-50 Hz
             coh.allFreq{i, j} =mean(mean(coh.cohSquare{i, j}(:, 1:148))); % 1-50 Hz            
         elseif i == j
-            coh.delta{i, j} = 1
-            coh.theta{i, j} = 1
-            coh.alphaMu{i, j} = 1
-            coh.beta1{i, j} = 1
-            coh.beta2{i, j} = 1
-            coh.gamma1{i, j} = 1
-            coh.gamma2{i, j} = 1
-            coh.allFreq{i, j} = 1
+            coh.delta{i, j} = 1;
+            coh.theta{i, j} = 1;
+            coh.alphaMu{i, j} = 1;
+            coh.beta1{i, j} = 1;
+            coh.beta2{i, j} = 1;
+            coh.gamma1{i, j} = 1;
+            coh.gamma2{i, j} = 1;
+            coh.allFreq{i, j} = 1;
         end
     end
 end
 
+coh2Lines = turnCoh2Lines(coh);
 
-s1 = '/Users/jcassidy/Documents/MATLAB/CMC/data/'
-pathName = strcat(s1, fd.SUBJ_ID)
-mkdir (pathName)
-cd (pathName)
-clearvars -except fd coh
-save
+cmcLatIndex = getCMCLatIndex(coh2Lines)
+
+s1 = '/Users/jcassidy/Documents/MATLAB/CMC/data/';
+pathName = strcat(s1, fd.SUBJ_ID);
+mkdir (pathName);
+cd (pathName);
+clearvars -except fd coh data coh2Lines;
+save;
 newName = strcat(fd.SUBJ_ID, '.mat');
 movefile('matlab.mat', newName);
-clear newName
-toc
+clear newName;
+toc;
 delete(gcp('nocreate'));
 
