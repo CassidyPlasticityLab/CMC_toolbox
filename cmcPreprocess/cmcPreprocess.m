@@ -131,8 +131,11 @@ end
 
 % Removes rounding error (EDDIT COMMENT LATER)
 trials = struct2cell(trials)
+
 for resize_index = 1:length(trials)
-    while size(trials{resize_index, 1}, 2) > 4000
+    if size(trials{resize_index, 1}, 2) < 4000
+        trials{resize_index, 1} = [];
+    elseif size(trials{resize_index, 1}, 2) > 4000
         remove = (size(trials{resize_index, 1}, 2) - 4000);
         trials{resize_index, 1} = trials{resize_index, 1}(:, 1001:end-remove);
     end
