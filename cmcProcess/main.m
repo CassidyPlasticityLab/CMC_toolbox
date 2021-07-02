@@ -1,8 +1,8 @@
 tic
 %load fd
 load('regions.mat')
-import cohAllReg.*
-import getCoh.*
+% import cohAllReg.
+% import getCoh.
 coh = {};
 
 parpool('local', maxNumCompThreads);
@@ -47,13 +47,13 @@ end
 
 coh2Lines = turnCoh2Lines(coh);
 
-cmcLatIndex = getCMCLatIndex(coh2Lines)
+cmcLatIndex = getCMCLatIndex(coh2Lines);
 
 s1 = '/Users/jcassidy/Documents/MATLAB/CMC/data/';
 pathName = strcat(s1, fd.SUBJ_ID);
 mkdir (pathName);
 cd (pathName);
-clearvars -except fd coh data coh2Lines;
+clearvars -except fd coh data coh2Lines cmcLatIndex;
 save;
 newName = strcat(fd.SUBJ_ID, '.mat');
 movefile('matlab.mat', newName);
