@@ -55,7 +55,7 @@ end
 label = data.label;
 
 % Filter the EMG signals
-cfg.bpfreq = [.5:50]; %Freq bands of interest are 10:50 Hz and 70:100 Hz
+cfg.bpfreq = [.5:50, 70:100]; %Freq bands of interest are 10:50 Hz and 70:100 Hz
 cfg.channel = data.label(258:end); %{'Extensor', 'Flexor', 'Policis', 'Biceps'}; %EMG electrode labels
 cfg.rectify = 'no'; %Opting to not rectify the EMG
 EMG_unrectify = ft_preprocessing(cfg, data_segmented); %save the processed EMG in the worksapce
@@ -111,6 +111,22 @@ else
     EMG_Final = EMG_Final;
 end
 
+if lesion_side == 'r'
+    EMG_temp1 = EMG_Final(1:4, :);
+    EMG_temp2 = EMG_Final(5:8, :);
+    EMG_Final = vertcat(EMG_temp2, EMG_temp1);
+
+    newOrder = [54	47	39	35	29	23	16	8	186	46	38	34	28	22	15	7	198	37	33	27	21	14	6	207	32	26	20	13	5	215	31	25	19	12	4	224	18	11	3	223	214	206	197	185	132	10	2	222	213	205	196	184	144	1	221	212	204	195	183	155	220	211	203	194	182	164	219	210	202	193	181	173	218	192	180	172	163	154	143	131	81	217	191	179	171	162	153	142	130	80	216	209	201	190	178	170	161	152	141	129	101	208	200	189	177	169	160	151	140	128	199	188	176	168	159	150	139	127	119	187	175	167	158	149	138	126	118	110	100	89	80	45	174	166	157	148	137	125	117	109	99	88	79	53	165	156	147	136	124	116	108	98	87	78	60	146	135	123	115	107	97	85	77	65	145	134	122	114	106	96	85	76	72	133	121	113	105	95	84	75	71	65	59	52	44	9	120	112	104	94	83	74	70	64	58	51	43	17	111	103	93	69	63	57	50	42	24	102	92	68	62	56	49	41	30	91	82	73	67	61	55	48	40	36	225	226	227	228	229	230	231	232	233	234	235	236	237	238	239	240	241	242	243	244	245	246	247	248	249	250	251	252	253	254	255	256];
+
+    for i = 1:256
+        EEG_Final(i, :) = EEG_Final(newOrder(i), :);
+    end
+else
+    EMG_Final = EMG_Final;
+    EEG_Final = EEG_Final;
+end
+
+
 %IfERROR, matrix sizes are not compatable, and error in recording epochs deleted
 % Concatenate the data
 data_Final = [EEG_Final; EMG_Final]; % Add the EEG and EMG signal arrays together
@@ -122,15 +138,15 @@ current_cidx = event(1).mffkey_cidx;
 for index = 2:(length(event))
     if current_cidx == event(index).mffkey_cidx;
         eval(['trials.trial' num2str(current_cidx) '= data_Final(1:end,event(index-1).latency'  ':event(index).latency'  ')']);
-        
+
     else
         current_cidx = event(index).mffkey_cidx;
     end
-    
+
 end
 
 
-% Removes rounding error. Unfortunately our matlab timing is a little off so we have to lose some data to set it to the nearest integer 
+% Removes rounding error. Unfortunately our matlab timing is a little off so we have to lose some data to set it to the nearest integer
 trials = struct2cell(trials);
 for resize_index = 1:length(trials)
     if size(trials{resize_index, 1}, 2) < 4000
@@ -151,17 +167,6 @@ for i = 1:y
     data.trial{1, i} = trials{i, 1};
 end
 
-% %Currently done in processing --> 
-% %FOR FLIP OPTIMIZATION. 
-% if lesion_side == 'r'
-%     for i = 1:length(data.trial)
-%      temp1 = data.trial{1, i}(257:260, :);
-%      temp2 = data.trial{1, i}(261:264, :);
-%      data.trial{1, i}(257:260, :) = temp2;
-%      data.trial{1, i}(261:264, :) = temp1;
-%     end
-% end
-
 data.label(257) = [];
 data.hdr.chantype(257:264) = {'emg'};
 data.hdr.chantype(265) = {''};
@@ -171,18 +176,15 @@ cfg.output     = 'powandcsd';
 cfg.method     = 'mtmfft';
 cfg.foilim     = [1 50];
 cfg.tapsmofrq  = 5;
-cfg.keeptrials = 'yes'; 
+cfg.keeptrials = 'yes';
 freq           = ft_freqanalysis(cfg, data);
-    
+
 cfg            = [];
-cfg.method     = 'coh';         
+cfg.method     = 'coh';
 cfg.keeptrials = 'yes';
 fd             = ft_connectivityanalysis(cfg, freq);
 
-fd.lesion_side = lesion_side;
-fd.SUBJ_ID = SUBJ_ID;
-
-clearvars -except fd data freq
+save(SUBJ_ID, "fd")
 
 
 % Author: Jasper Mark, November 2020

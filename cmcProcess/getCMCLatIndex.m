@@ -9,12 +9,11 @@ for i = 1:length(fields)
         ipsiValue.(fields{i}){j} = coh2Lines.(fields{i}){2, ipsiLabelCol(j)};
         contraValue.(fields{i}){j} = coh2Lines.(fields{i}){2, contraLabelCol(j)};
         cmcLatIndexVal.(fields{i}){j} = (ipsiValue.(fields{i}){j} - contraValue.(fields{i}){j}) ./ (ipsiValue.(fields{i}){j} + contraValue.(fields{i}){j});
+        
+        ipsiLabel{j} = coh2Lines.allFreq{1, ipsiLabelCol(j)};
+        newLabel{j} = erase(ipsiLabel{j}, '__left');
+        cmcLatIndexLabel{j} = strcat(newLabel{j}, '_laterality_index');
+    end
+    cmcLatIndex.(fields{i}) = vertcat(cmcLatIndexLabel, cmcLatIndexVal.(fields{i}));
+end
 
-            ipsiLabel{j} = coh2Lines.allFreq{1, ipsiLabelCol(j)};
-            newLabel{j} = erase(ipsiLabel{j}, '__left');
-            cmcLatIndexLabel{j} = strcat(newLabel{j}, '_laterality_index');
-    end
-        cmcLatIndex.(fields{i}) = vertcat(cmcLatIndexLabel, cmcLatIndexVal.(fields{i}));
-    end
-    
-  
