@@ -1,100 +1,55 @@
-CMC Data processing toolbox
+Relative Power, Cortico-cortico, and Corticomusuclr Coherence toolbox
 ===========================
 
-Includes both preprocessing and processing scripts for Corticomuscular 
-Coherence data collected via EGI Geodesic EEG/EMG system. Requires download 
-of EEGLAB <https://sccn.ucsd.edu/eeglab/download.php> and the fieldtrip 
-toolbox <https://www.fieldtriptoolbox.org/download.php>.
+Includes processing scripts for analysis of EEG and/or EEG/EMG data. Requires 
+data to be processed in EEGLAB (<https://sccn.ucsd.edu/eeglab/download.php>)
 
-cmcPreprocess
+Calls on both functions from EEGLAB and FIELDTRIP (<https://www.fieldtriptoolbox.org/download.php>).
+For convenience they have been added in the plugin folder.
+
+This toolbox currently supports EGI 256 lead Hydrocel caps.
+
+Prior to Running
 -------------
-Preprocesses, isolates signals, and concatenates the EEG and EMG portions 
-of corticomusuclar coherence (CMC) data. To run enter cmcPreprocess into 
-the command window.
+Modify the configToolbox.m script with the appropriate information.
 
-Before running, make sure EEGLAB and fieldtrip are added to the path.
-The user must upload the raw .mff file collected from egi netstation to the 
-'current folder' and add it to the path. Other inputs include the processed 
-.mat file from eeglab, a list of theepochs removed from the EEG set in 
-matlab (before and after ICA), the subject ID, and the lesion hemisphere.
+This includes:
+       [1] the path where the data is stored
+       [2] whether there is PNS input (EMG/ECG data)
+       [3] whether the data is stroke or healthy control
+       [4] channels removed from the dataset during processing
+       [5] whether to hilbert transform the data
+       [6] whether to rectify the data
+       [7] whether affected (or right) or less affected (or left) extremity
+       [8] stroke type (cortical/cerebellar)
+       [9] trial computation window start time
+       [10] trial computation window end time
+       [11] extremity label value in the file name
+       [12] frequency bands ranges
+       [13] desired outputs
 
-OutPut includes structures:
-freq - power spectrum and cross spectrum
-fd - coherence spectrum
-data - data / trial information
+Modify the ROI.mat file accordingly, with the first row including labels
+and the following containing the corresponding electrodes of interest.
 
-cmcProcess
-----------
-Processing the CMC data and computes a coherence matrix for all regions of
-interest (ROI) across all frequency bands. 
+To Run
+-------------
+Below are the steps to run the toolbox:
+       [1] Add the toolbox to your path.
+       [2] Open the folder you would like the outputs to be saved in
+       [3] run main.m or enter main in the command line.
 
-Regions of interest are defined in regions.mat. Can be changed as needed. 
-Due to flipping the data to standardize the lesion to the left hemisphere, 
-the flipped ROI label and electrode array must be placed under the 
-corresponding ROI.
+Outputs
+-------------
+The following outputs are:
+       [1] cohSpctrm: a 3D matrix containing coherence data (Chan X Chan X Freq [0.33 increments starting at 1])
+       [2] cohValsOneLine: A 1XN array containing coherence values
+       [3] cohLabelOneLine: A 1XN array containing coherence label strings
+       [4] CMCSpctrm: a 3D matrix containing CMC data (Chan X Chan X Freq [0.33 increments starting at 1])
+       [5] CMCValsOneLine: A 1XN array containing CMC values
+       [6] CMCLabelOneLine: A 1XN array containing CMC label strings
+       [7] relPowSpctrm: a 3D matrix containing CMC data (Chan X Chan X Freq [0.33 increments starting at 1])
+       [8] relPowValsOneLine: A 1XN array containing CMC values
+       [8] relPowLabelOneLine: A 1XN array containing CMC label strings
+       [9] retainedTrials: 1XN array defining which epochs are retained after preprocessing
+       [10] totalTrials: A single number defining how many EPOCHS were performed during task data
 
-Requires user to upload the fd.mat file created during the above steps to
-the 'current folder'. To run enter main into the command window after 
-ensuring that the cmcProcess folder is added to the pathway.
-
-Output:
-coh -  A structure containing multiple matrices including the raw coherence 
-       data for each region across all frequency bands as well as the
-       single coherence value matrix for each region at their respective
-       frequency bands. This is saved in a newly created folder in the path
-       CMC/data/<SUBJ.ID> 
-
---------------------------------------------------------------------------
-
-Trouble Shoot
-
-During the preprocessing steps four things may go wrong. Don't stress, it 
-happens to all of us. Here are some simple resolutions.
-
-Case 1. You can't load in the raw .mff file
-
-        First, don't get upset, I know reading the README file can be a lot
-        but there is some really nice information here. For example, make 
-        sure to reread line 15 and 16. The .mff file must be in the current
-        folder that you are working in AND added to the path.
-
-Case 2. The EEG and EMG cannot be concatenated after inputing the epochs 
-        removed (before and after ICA)
-
-        I wish I could help you here. It seems like someone didn't properly
-        record which epochs were removed in their excel sheet or notebook.
-        Double check that you didn't include any duplicates, otherwise you
-        have to start from ground zero. I wish I had better news.
-
-Case 3. The trial timings are wack. 
-
-        After the trials created double check the command window and make 
-        sure that each trial before the final 3 second segmentation ranged 
-        from 4-6 seconds. If you had some that  were 13 seconds or 2, 
-        something went wrong. This occurs when the event information was 
-        a) not properly transfered over from EGI, or b) someone missed a 
-        part of a trial during the recording session. Worry not! This is a 
-        tedious, but easy fix. Scroll through the event information in the 
-        workspace. Manually double check that each pair under the 
-        mffkey_cidx column is matched correctly. This means looking at the 
-        Din label to make sure each pair contains D125 then D255 in order.
-        The timing should also be ~5 seconds apart in the other columns.
-        After making the change, copy and paste lines 120 through the end 
-        into the commaned window and enter.
-
-Case 4. The trials are made, but only a couple of timings are off.
-
-        During EEG cleaning, someone must've removed a portion of data from
-        the trial and failed to removed one of the event labels during the
-        newly 'edited' trial. That's okay. Go ahead and reenter lines 1:140
-        in the comaned window. After completing the steps open up trials in
-        the workspace. By hand, look for the trials that are greater than 3
-        seconds (3000ms) and delete the corresponding row. Then enter lines 
-        140:174 in the command line. finí!
-
-Any other errors that pop up are likely due to user error, i.e., not 
-placing the prompt responses in single-quotes, '' or brackets, [].  
-        
-
-Author: Jasper Mark | Last Update: 5/17/2021
-        
