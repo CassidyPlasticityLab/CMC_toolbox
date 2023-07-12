@@ -1,4 +1,4 @@
-Relative Power, Cortico-cortico, and Corticomusuclr Coherence toolbox
+Relative Power, Cortical-cortical, and Corticomusuclar Coherence toolbox
 ===========================
 
 Includes processing scripts for analysis of EEG and/or EEG/EMG data. Requires 
