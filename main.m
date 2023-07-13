@@ -122,7 +122,7 @@ for indexProcess = 1:length(config.fileList)
     
     
     saveName = strcat(config.fileList(indexProcess).name(1:end-4), '_CMC_POW_COH');
-    save(saveName, 'cohSpctrm', 'cohValsOneLine', 'cohLabelOneLine', 'CMCSpctrm', 'CMCValsOneLine', 'CMCLabelOneLine', 'relPowSpctrm', 'relPowValsOneLine', 'relPowLabelOneLine', 'retainedTrials', 'totalTrials')
+    save(saveName, 'cohSpctrm', 'cohValsOneLine', 'cohLabelOneLine', 'CMCSpctrm', 'CMCValsOneLine', 'CMCLabelOneLine', 'relPowSpctrm', 'relPowValsOneLine', 'relPowLabelOneLine', 'retainedTrials', 'totalTrials', 'config')
     toc
     
 end
