@@ -115,7 +115,7 @@ for indexProcess = 1:length(config.fileList)
     
     
     if config.computeRelativePower == 'y'
-        [freqRelPow] = getComputeRelativePower(data);
+        [freqRelPow] = getComputeRelativePower(data, config.freqBands);
         [relPowSpctrm, relPowValsOneLine, relPowLabelOneLine] = getExtractPowerValues(freqRelPow, config.freqBands, EEG, chanClass);
         [imName] = getPlotRelativePower(EEG, freqRelPow, chanClass, config.freqBands, lesionSide, config.strokeType, config.saveTopos, config.fileList(indexProcess).name);
     end
