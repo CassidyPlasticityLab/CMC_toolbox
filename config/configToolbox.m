@@ -14,6 +14,8 @@
 %   [13] desired outputs
 
 config.dataPath   = '/Volumes/CassidyLab/EEG_CognitiveMotor_Study/Data/EEG/Young/final/Right/final';
+config.savePath   = '/Volumes/CassidyLab/EEG_CognitiveMotor_Study/Data/EEG/Young/Final/Right/CMC_POW_COH';
+
 config.pnsData = 'y'; %Is there EMG/ECG? Or other PNS data you would like to process (y/n)
 config.stroke = 'n'; %Is this stroke data
 config.chansRemoved = [67, 73, 82, 91, 92, 102, 103, 111, 112, 120, 121, 133, 134, 145, 146, 156, 165, 166, 174, 175, 187, 188, 199, 200, 208, 209, 216, 217, 218, 219, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257];
@@ -42,3 +44,4 @@ config.computeRelativePower = 'y'; %Do you want to compute relative power (y/n)
 config.fileList = dir(fullfile(config.dataPath, '**', '*.set'));
 
 addpath(config.dataPath)
+cd(config.savePath)
