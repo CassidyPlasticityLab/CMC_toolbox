@@ -1,4 +1,4 @@
-function [freqRelPow] = getComputeRelativePower(data, freqBands)
+function [freqRelPow] = getComputeRelativePower(data)
 
 
 cfg            = [];
@@ -11,7 +11,7 @@ freqRelPow           = ft_freqanalysis(cfg, data);
 
 for i = 1:size(freqRelPow.powspctrm, 1)
     for j = 1:size(freqRelPow.powspctrm, 2)
-relPowSpctrm(i, j, :) = freqRelPow.powspctrm(i, j, :)/ sum(freqRelPow.powspctrm(i, j, (round(freqRelPow.freq) >=freqBands.delta(1) & round(freqRelPow.freq) <=freqBands.beta2(end))));
+relPowSpctrm(i, j, :) = freqRelPow.powspctrm(i, j, :)/mean(freqRelPow.powspctrm(i, j, :));
 end
 end
 
