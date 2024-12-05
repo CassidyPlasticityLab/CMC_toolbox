@@ -33,7 +33,7 @@
 
 %SPECIAL NOTE:
 % During task, the outputs define the right hand as the task performing
-% extremity. Meaning if it is left hand performing the task data, the hands 
+% extremity. Meaning if it is left hand performing the task data, the hands
 % and cortices are flipped.
 
 %Additionally, it is standardized so the left hemisphere is ipsilesional.
@@ -49,17 +49,6 @@ for indexProcess = 1:length(config.fileList)
     EEG = pop_loadset(config.fileList(indexProcess).name);
     
     config.extremity = config.fileList(indexProcess).name(config.extremityLableValue); %Is this right (affected) or left (less-affected) extremity data (r/l). Note data is standardized so the affected extremity is the right hand
-    
-    if config.stroke == 'y'
-        if config.extremity == 'l'
-            lesionSide = 'r';
-        else
-            lesionSide = 'l';
-        end
-    else
-        lesionSide = 'l';
-    end
-    
     
     chanClass = getChanClass(EEG);
     
@@ -80,7 +69,7 @@ for indexProcess = 1:length(config.fileList)
     end
     
     %Flip electrodes
-    EEG = flipElecs(EEG, lesionSide, config.extremity, config.strokeType, chanClass);
+    EEG = flipElecs(EEG, config.lesionSide{1, indexProcess}, config.extremity, config.strokeType, chanClass);
     
     %Compute the total number of trials and which trials were retained for    tolerability
     [retainedTrials, totalTrials] = getRetainedTrials(EEG);
@@ -101,29 +90,57 @@ for indexProcess = 1:length(config.fileList)
     if config.computeCoherence == 'y'
         [freqFourierCoh,fdFourierCoh] = getComputeCoherence(data);
         [cohSpctrm, coh, cohValsOneLine, cohLabelOneLine] = getExtractCohValues(fdFourierCoh, chanClass, config.freqBands);
-        [imName] = getPlotCoherence(EEG, fdFourierCoh, chanClass, config.freqBands, lesionSide, config.strokeType, config.saveTopos, config.fileList(indexProcess).name);
+        [imName] = getPlotCoherence(EEG, fdFourierCoh, chanClass, config.freqBands, config.lesionSide{1, indexProcess}, config.strokeType, config.saveTopos, config.fileList(indexProcess).name);
     end
     
     if config.pnsData == 'y'
         if config.computeCMC == 'y'
             [freqCMC, freqFourierCMC, fdCMC,fdFourierCMC] = getComputeCMC(data);
             [CMCSpctrm, CMC, CMCValsOneLine, CMCLabelOneLine] = getExtractCMCValues(fdCMC, fdFourierCMC, chanClass, config.freqBands, config.chansRemoved);
-            [imName] = getPlotCMC(EEG, fdCMC, chanClass, config.freqBands, lesionSide, config.strokeType, config.saveTopos, config.fileList(indexProcess).name);
+            [imName] = getPlotCMC(EEG, fdCMC, chanClass, config.freqBands, config.lesionSide{1, indexProcess}, config.strokeType, config.saveTopos, config.fileList(indexProcess).name);
         end
         
     end
     
     
     if config.computeRelativePower == 'y'
-        [freqRelPow] = getComputeRelativePower(data, config.freqBands);
+        [freqRelPow] = getComputeRelativePower(data);
         [relPowSpctrm, relPowValsOneLine, relPowLabelOneLine] = getExtractPowerValues(freqRelPow, config.freqBands, EEG, chanClass);
-        [imName] = getPlotRelativePower(EEG, freqRelPow, chanClass, config.freqBands, lesionSide, config.strokeType, config.saveTopos, config.fileList(indexProcess).name);
+        [imName] = getPlotRelativePower(EEG, freqRelPow, chanClass, config.freqBands, config.lesionSide{1, indexProcess}, config.strokeType, config.saveTopos, config.fileList(indexProcess).name);
     end
     
+    if config.computePAC == 'y'
+        [PACz, PAC, ampByPhase] = getComputePhaseAmplitudeCoupling(data, config.fsample, chanClass, config.PACLowFreq, config.PACHighFreq, config.PACLowFreqRoi);
+    end
     
     saveName = strcat(config.fileList(indexProcess).name(1:end-4), '_CMC_POW_COH');
-    save(saveName, 'cohSpctrm', 'cohValsOneLine', 'cohLabelOneLine', 'CMCSpctrm', 'CMCValsOneLine', 'CMCLabelOneLine', 'relPowSpctrm', 'relPowValsOneLine', 'relPowLabelOneLine', 'retainedTrials', 'totalTrials', 'config')
+    
+    
+    % List of variables to save
+    variableList = {'cohSpctrm', 'cohValsOneLine', 'cohLabelOneLine', ...
+        'CMCSpctrm', 'CMCValsOneLine', 'CMCLabelOneLine', ...
+        'relPowSpctrm', 'relPowValsOneLine', 'relPowLabelOneLine', ...
+        'retainedTrials', 'totalTrials', 'PACz', 'PAC', 'ampByPhase'};
+    
+    % Initialize a struct to hold the variables
+    dataToSave = struct();
+    
+    % Loop through the variable list and add existing variables to the struct
+    for i = 1:length(variableList)
+        if exist(variableList{i}, 'var') % Check if the variable exists
+            dataToSave.(variableList{i}) = eval(variableList{i}); % Add to the struct
+        end
+    end
+    
+    % Save the struct to the file
+    if ~isempty(fieldnames(dataToSave)) % Ensure there is data to save
+        save(saveName, '-struct', 'dataToSave');
+        fprintf('Data saved to %s\n', saveName);
+    else
+        fprintf('No variables to save.\n');
+    end
     toc
+    clearvars -except config
     
 end
 displayCredits
