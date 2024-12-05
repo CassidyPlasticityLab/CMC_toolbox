@@ -12,7 +12,7 @@ if lesionSide == 'r'
         for i = 1:size(EEG.chanlocs, 2)
             EEG.chanlocs(i).Y = EEG.chanlocs(i).Y*(-1);
             EEG.chanlocs(i).theta = EEG.chanlocs(i).theta*(-1);
-            EEG.chanlocs(i).sph_theta_besa = EEG.chanlocs(i).sph_theta_besa*(-1);
+            EEG.chanlocs(i).sph_theta_besa = EEG.chanlocs(i).sph_theta*(-1);
         end
     end
 end
