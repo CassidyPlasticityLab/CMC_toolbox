@@ -13,7 +13,7 @@
 %   [12] frequency bands ranges
 %   [13] desired outputs
 
-config.dataPath   = 'Z:/ahs/Groups/CassidyLab/EEG_CognitiveMotor_Study/Data/EEG/Young/final/Right/final';
+config.dataPath   = 'ENTER PATH';
 config.pnsData = 'y'; %Is there EMG/ECG? Or other PNS data you would like to process (y/n)
 config.stroke = 'n'; %Is this stroke data
 config.lesionSide = {'l', 'r', 'l','l', 'l', 'l', 'r', 'l','l', 'l', 'l', 'r', 'l','l', 'l', 'l', 'r', 'l','l', 'l', 'l', 'r', 'l','l', 'l', 'l', 'r', 'l','l', 'l'} %lesion hemisphere side ('l'/'r'). If control data enter 'l'. This is for each subject to be processed.
