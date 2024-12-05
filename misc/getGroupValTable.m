@@ -1,8 +1,8 @@
 %Little cheat sheet to extract the data for analysis
 clear
-dataPath = '/Volumes/CassidyLab/EEG_CognitiveMotor_Study/Data/EEG/Young/final/Left/CMC_POW_COH';
+dataPath = '/Volumes/CassidyLab/PersonalFolders_CassidyLabMembers/Jasper/HospitalStudyProcess/V1_SA/POW_COH_CMC';
 fileList = dir(fullfile(dataPath, '**', '*.mat'));
-
+addpath(dataPath)
 for i = 1:length(fileList)
 load(fileList(i).name, 'CMCLabelOneLine', 'CMCValsOneLine', 'cohLabelOneLine', 'cohValsOneLine', 'relPowLabelOneLine', 'relPowValsOneLine')
 fileList(i).CMC_Vals = CMCValsOneLine;
