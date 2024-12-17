@@ -111,6 +111,10 @@ for indexProcess = 1:length(config.fileList)
     
     if config.computePAC == 'y'
         [PACz, PAC, ampByPhase] = getComputePhaseAmplitudeCoupling(data, config.fsample, chanClass, config.PACLowFreq, config.PACHighFreq, config.PACLowFreqRoi);
+        [PACValsOneLine, PACLabelOneLine] = getPACValuesFromROI(PAC, EEG);
+        [PACzValsOneLine, PACzLabelOneLine] = getPACzValuesFromROI(PACz, EEG);
+
+
     end
     
     saveName = strcat(config.fileList(indexProcess).name(1:end-4), '_CMC_POW_COH');
@@ -120,7 +124,7 @@ for indexProcess = 1:length(config.fileList)
     variableList = {'cohSpctrm', 'cohValsOneLine', 'cohLabelOneLine', ...
         'CMCSpctrm', 'CMCValsOneLine', 'CMCLabelOneLine', ...
         'relPowSpctrm', 'relPowValsOneLine', 'relPowLabelOneLine', ...
-        'retainedTrials', 'totalTrials', 'PACz', 'PAC', 'ampByPhase'};
+        'retainedTrials', 'totalTrials', 'PACz', 'PAC', 'ampByPhase', 'PACValsOneLine', 'PACLabelOneLine', 'PACzValsOneLine', 'PACzLabelOneLine', };
     
     % Initialize a struct to hold the variables
     dataToSave = struct();
