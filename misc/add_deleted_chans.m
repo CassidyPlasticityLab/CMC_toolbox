@@ -18,7 +18,7 @@ data_size = size(clean_data, 2);
 % num epochs
 epoch_size = size(clean_data, 3);
 
-restored_data=zeros(256, data_size, epoch_size);
+restored_data=nan(256, data_size, epoch_size);
 restored_chanlocs = struct;
 
 %loops through the channel numbers and adds them in
