@@ -110,7 +110,7 @@ for indexProcess = 1:length(config.fileList)
     end
     
     if config.computePAC == 'y'
-        [PACz, PAC, ampByPhase] = getComputePhaseAmplitudeCoupling(data, config.fsample, chanClass, config.PACLowFreq, config.PACHighFreq, config.PACLowFreqRoi);
+        [PACz, PAC, ampByPhase] = getComputePhaseAmplitudeCoupling(data, config.fsample, config.PACLowFreq, config.PACHighFreq, config.PACLowFreqRoi);
         [PACValsOneLine, PACLabelOneLine] = getPACValuesFromROI(PAC, EEG);
         [PACzValsOneLine, PACzLabelOneLine] = getPACzValuesFromROI(PACz, EEG);
 
