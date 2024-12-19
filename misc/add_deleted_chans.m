@@ -18,7 +18,7 @@ data_size = size(clean_data, 2);
 % num epochs
 epoch_size = size(clean_data, 3);
 
-restored_data=nan(256, data_size, epoch_size);
+restored_data=zeros(256, data_size, epoch_size);
 restored_chanlocs = struct;
 
 %loops through the channel numbers and adds them in
@@ -35,7 +35,7 @@ for i=1:256
         j=j + 1;
     else
         % fill deleted channel data with zeros
-        restored_data(i,:,:)=zeros(1, data_size, epoch_size);
+        restored_data(i,:,:)=nan(1, data_size, epoch_size);
         
         % add in chan location info corresponding to deleted channel
         restored_chanlocs(i).labels = 'deleted';
