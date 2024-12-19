@@ -1,4 +1,4 @@
-function [PACz, PAC, ampByPhase] = getComputePhaseAmplitudeCoupling(data, fsample, chanClass, lowFreq, highFreq, lowFreqSeed)
+function [PACz, PAC, ampByPhase] = getComputePhaseAmplitudeCoupling(data, fsample, lowFreq, highFreq, lowFreqSeed)
 % myDir = '\\ad.unc.edu\med\ahs\Groups\CassidyLab\PersonalFolders_CassidyLabMembers\Jasper\FinalEEGsforPAC\PACpre';
 
 data = horzcat(data.trial{1, 1:end});
